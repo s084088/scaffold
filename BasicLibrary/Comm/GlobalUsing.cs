@@ -1,0 +1,12 @@
+﻿global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using Auth;
+global using Auth.Models;
+global using BasicLibrary.Comm;
+global using Dto.Comm;
+global using MyDBEntity;
+global using MyDBExtend;
+global using MyDBExtend.Tables;
+global using Util;
+global using Util.Model;
