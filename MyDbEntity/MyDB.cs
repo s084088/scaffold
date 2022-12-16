@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -39,17 +41,34 @@ public class MyDB : DbContext
         //保存变动
         int count = base.SaveChanges();
 
-        base.SavedChanges += MyDB_SavedChanges;
+        //保存成功后再记录日志
+        logs.ForEach(l => LogHelper.WriteLog(l.Log, "logs/mytables/" + DateTime.Now.ToDefaultDateString(), l.TableName + ".table"));
+        return count;
+    }
+
+    /// <summary>
+    /// 保存所有更改并记录日志
+    /// </summary>
+    /// <param name="user">修改的用户,可以是任意字符串,也可为空,建议写userID或userName后台任务建议写system</param>
+    /// <returns></returns>
+    public async Task<int> SaveChangesAsync(string user)
+    {
+        //插入日志列表
+        List<EfChangeLogModel> logs = ChangeTracker.WriteEFDataLog(user);
+        //保存变动
+        int count = await base.SaveChangesAsync();
 
         //保存成功后再记录日志
         logs.ForEach(l => LogHelper.WriteLog(l.Log, "logs/mytables/" + DateTime.Now.ToDefaultDateString(), l.TableName + ".table"));
         return count;
     }
 
-    private void MyDB_SavedChanges(object sender, SavedChangesEventArgs e)
-    {
-
-    }
+    /// <summary>
+    /// 异步保存所有更改并记录日志(废弃)
+    /// </summary>
+    /// <returns></returns>
+    [Obsolete("请使用带参数的SaveChangesAsync", true)]
+    public new async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => await SaveChangesAsync("");
 
     /// <summary>
     /// 保存所有更改并记录日志(废弃)
