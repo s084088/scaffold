@@ -10,8 +10,8 @@ namespace BasicLibrary.Comm
     {
         private const string region = "cn-shanghai";
         private const string endpoint = "oss-cn-shanghai.aliyuncs.com";
-        private const string accessKeyId = "LTAI5tGttid1gvAuVRAEyRXu";
-        private const string accessKeySecret = "leD40cvcrc2mVz6GirG22yvNQ8oTfo";
+        private const string accessKeyId = "";
+        private const string accessKeySecret = "";
         private const double time = 60;
         private readonly static OssClient client = new(endpoint, accessKeyId, accessKeySecret);
 
